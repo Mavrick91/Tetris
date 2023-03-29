@@ -1,15 +1,15 @@
 import React, { type FC } from "react";
 import Cell from "../Cell";
 
-export interface RowProps {
+type Props = {
   row: number[];
-}
+};
 
-const Row: FC<RowProps> = ({ row }) => {
+const Row: FC<Props> = ({ row }) => {
   return (
     <div className="flex">
       {row.map((cell, index) => (
-        <Cell key={index} cell={cell} />
+        <Cell key={index} numberColorIndex={cell} />
       ))}
     </div>
   );

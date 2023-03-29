@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Board from "~/components/Board";
+import Tetris from "../components/Tetris/Tetris";
 
 const Home: NextPage = () => {
   return (
@@ -11,7 +11,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex flex-col items-center justify-center min-h-screen border-2 border-red-500">
-        <Board />
+        <Tetris />
       </main>
     </>
   );
