@@ -137,7 +137,7 @@ const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore }) => {
   return (
     <div className="flex flex-col">
       {mergedBoard.map((row, index) => (
-        <Row key={index} row={row} />
+        <Row key={index} row={row} rowIndex={index} />
       ))}
     </div>
   );
