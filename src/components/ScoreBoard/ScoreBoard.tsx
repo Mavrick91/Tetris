@@ -6,9 +6,9 @@ type Props = {
 
 const ScoreBoard: FC<Props> = ({ score }) => {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center absolute -top-[76px] left-0 right-0 font-sans text-white">
       <div className="text-xl font-bold mb-2">Score</div>
-      <div className="text-2xl font-mono">{score}</div>
+      <div className="text-2xl font-mono">{score.toLocaleString()}</div>
     </div>
   );
 };

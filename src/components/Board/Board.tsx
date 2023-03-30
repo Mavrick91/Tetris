@@ -1,11 +1,4 @@
-import {
-  type FC,
-  useCallback,
-  useEffect,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { type FC, useCallback, useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { type Position, type Tetromino } from "~/types/tetromino";
 import { isEqual } from "lodash";
 import {
@@ -23,17 +16,17 @@ import Row from "../Row";
 
 type BoardState = number[][];
 
-const initialBoard: BoardState = Array.from({ length: 20 }, () =>
-  Array.from({ length: 10 }, () => 0)
-);
+const initialBoard: BoardState = Array.from({ length: 20 }, () => Array.from({ length: 10 }, () => 0));
 
 type Props = {
   tetrimino: Tetromino;
-  setTetrimino: (tetrimino: Tetromino) => void;
+  setTetrimino: Dispatch<SetStateAction<Tetromino | undefined>>;
   setScore: Dispatch<SetStateAction<number>>;
+  tetriminoQueue: Tetromino[];
+  setTetriminoQueue: Dispatch<SetStateAction<Tetromino[]>>;
 };
 
-const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore }) => {
+const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore, tetriminoQueue, setTetriminoQueue }) => {
   const [boardState, setBoardState] = useState(initialBoard);
   const [position, setPosition] = useState<Position>({ x: 4, y: 0 });
 
@@ -54,13 +47,9 @@ const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore }) => {
     if (!isEqual(position, newPosition)) {
       setPosition(newPosition);
     } else {
-      const initialRowCount = boardState.filter((row) =>
-        row.some((cell) => cell > 0)
-      ).length;
+      const initialRowCount = boardState.filter((row) => row.some((cell) => cell > 0)).length;
       const clearedBoard = clearFullRows(mergedBoard);
-      const newRowCount = clearedBoard.filter((row) =>
-        row.some((cell) => cell > 0)
-      ).length;
+      const newRowCount = clearedBoard.filter((row) => row.some((cell) => cell > 0)).length;
       const clearedRows = initialRowCount - newRowCount;
 
       if (clearedRows > 0) {
@@ -68,19 +57,19 @@ const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore }) => {
       }
 
       setBoardState(clearedBoard);
-      setTetrimino(getRandomTetromino());
+      const [, ...remainingTetriminos] = tetriminoQueue;
+      setTetriminoQueue([...remainingTetriminos, getRandomTetromino()]);
+      setTetrimino(tetriminoQueue[0]);
       setPosition({ x: 4, y: 0 });
     }
-  }, [boardState, mergedBoard, position, setTetrimino, tetrimino, updateScore]);
+  }, [boardState, mergedBoard, position, setTetrimino, setTetriminoQueue, tetrimino, tetriminoQueue, updateScore]);
 
   useEffect(() => {
     const timer = setInterval(() => {
       if (isBoardFull(boardState, tetrimino)) {
         alert("Game Over");
         clearInterval(timer);
-      } else {
-        moveDown();
-      }
+      } else moveDown();
     }, 500);
 
     return () => clearInterval(timer);
@@ -103,10 +92,7 @@ const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore }) => {
         case "w":
           const rotatedShape = rotateMatrix(tetrimino.shape);
           const rotatedTetrimino = { ...tetrimino, shape: rotatedShape };
-          const newCoordinates = getTetriminoCoordinates(
-            rotatedTetrimino,
-            position
-          );
+          const newCoordinates = getTetriminoCoordinates(rotatedTetrimino, position);
           if (isValidPosition(boardState, newCoordinates)) {
             setTetrimino(rotatedTetrimino);
           }
@@ -135,7 +121,7 @@ const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore }) => {
   }, [boardState, tetrimino, position, handleKeyDown]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col border-[16px] border-[#3A506B]">
       {mergedBoard.map((row, index) => (
         <Row key={index} row={row} rowIndex={index} />
       ))}

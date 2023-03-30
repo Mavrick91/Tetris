@@ -1,6 +1,45 @@
 import TETROMINOES from "~/constants/tetrominoes";
 import { type Position, type Tetromino } from "~/types/tetromino";
 
+export const getTetrominoColor = (numberColorIndex: number) => {
+  switch (numberColorIndex) {
+    case 0:
+      return "bg-slate-900";
+    case 1:
+      return "bg-blue-500";
+    case 2:
+      return "bg-red-500";
+    case 3:
+      return "bg-green-500";
+    case 4:
+      return "bg-yellow-500";
+    case 5:
+      return "bg-purple-500";
+    case 6:
+      return "bg-pink-500";
+    case 7:
+      return "bg-orange-500";
+    default:
+      return "bg-slate-900";
+  }
+};
+
+export function getBorder(columnIndex: number, rowIndex: number): string {
+  let border = "border-b";
+
+  if (columnIndex === 0 || columnIndex <= 9) {
+    border += " border-l";
+  }
+  if (rowIndex === 0) {
+    border += " border-t";
+  }
+  if (columnIndex === 9) {
+    border += " border-r";
+  }
+
+  return `${border} border-slate-400`;
+}
+
 export function getRandomTetromino(): Tetromino {
   if (TETROMINOES.length === 0) {
     throw new Error("No tetrominoes");
@@ -16,10 +55,7 @@ export function getRandomTetromino(): Tetromino {
   return tetromino;
 }
 
-export function getTetriminoCoordinates(
-  tetrimino: Tetromino,
-  position: Position
-): Position[] {
+export function getTetriminoCoordinates(tetrimino: Tetromino, position: Position): Position[] {
   const coordinates: Position[] = [];
 
   tetrimino.shape.forEach((row, rowIndex) => {
@@ -35,10 +71,7 @@ export function getTetriminoCoordinates(
   return coordinates;
 }
 
-export function isValidPosition(
-  boardState: number[][],
-  position: Position[]
-): boolean {
+export function isValidPosition(boardState: number[][], position: Position[]): boolean {
   return position.every(({ x, y }: Position) => {
     return (
       // check if y is in the range of boardState
@@ -55,11 +88,7 @@ export function isValidPosition(
   });
 }
 
-export function moveTetriminoDown(
-  boardState: number[][],
-  tetrimino: Tetromino,
-  position: Position
-): Position {
+export function moveTetriminoDown(boardState: number[][], tetrimino: Tetromino, position: Position): Position {
   const newPosition: Position = { x: position.x, y: position.y + 1 };
   const newCoordinates = getTetriminoCoordinates(tetrimino, newPosition);
 
@@ -70,11 +99,7 @@ export function moveTetriminoDown(
   return position;
 }
 
-export function mergeTetriminoWithBoard(
-  board: number[][],
-  tetrimino: Tetromino,
-  position: Position
-): number[][] {
+export function mergeTetriminoWithBoard(board: number[][], tetrimino: Tetromino, position: Position): number[][] {
   const merged = board.map((row) => row.slice());
   const coordinates = getTetriminoCoordinates(tetrimino, position);
 
@@ -85,10 +110,7 @@ export function mergeTetriminoWithBoard(
   return merged;
 }
 
-export function isBoardFull(
-  clearedBoard: number[][],
-  tetrimino: Tetromino
-): boolean {
+export function isBoardFull(clearedBoard: number[][], tetrimino: Tetromino): boolean {
   const newTetriminoCoordinates = getTetriminoCoordinates(tetrimino, {
     x: 4,
     y: 0,
@@ -121,11 +143,7 @@ export function clearFullRows(board: number[][]): number[][] {
   return clearedBoard;
 }
 
-export function getDropPosition(
-  boardState: number[][],
-  tetrimino: Tetromino,
-  position: Position
-): number {
+export function getDropPosition(boardState: number[][], tetrimino: Tetromino, position: Position): number {
   let newY = position.y;
 
   while (true) {
