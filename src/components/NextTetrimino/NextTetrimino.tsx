@@ -25,6 +25,12 @@ const NextTetriminos = ({ tetriminoQueue }: NextTetriminosProps) => {
                           ? `${getTetrominoColor(tetrimino.color)} border border-slate-300 shadow-inner`
                           : "bg-transparent"
                       }`}
+                      style={{
+                        boxShadow:
+                          tetrimino.color && cell
+                            ? "inset -1px 1px 4px rgba(255, 255, 255, 0.55), inset 1px -1px 4px rgba(0, 0, 0, 0.6)"
+                            : "",
+                      }}
                     />
                   );
                 })}
