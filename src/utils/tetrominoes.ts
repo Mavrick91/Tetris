@@ -120,3 +120,24 @@ export function clearFullRows(board: number[][]): number[][] {
 
   return clearedBoard;
 }
+
+export function getDropPosition(
+  boardState: number[][],
+  tetrimino: Tetromino,
+  position: Position
+): number {
+  let newY = position.y;
+
+  while (true) {
+    const newPosition: Position = { x: position.x, y: newY + 1 };
+    const newCoordinates = getTetriminoCoordinates(tetrimino, newPosition);
+
+    if (!isValidPosition(boardState, newCoordinates)) {
+      break;
+    }
+
+    newY += 1;
+  }
+
+  return newY;
+}

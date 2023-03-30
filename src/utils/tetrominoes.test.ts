@@ -2,6 +2,7 @@ import TETROMINOES from "~/constants/tetrominoes";
 import { type Position, type Tetromino } from "~/types/tetromino";
 import {
   clearFullRows,
+  getDropPosition,
   getRandomTetromino,
   getTetriminoCoordinates,
   isBoardFull,
@@ -228,28 +229,31 @@ describe("mergeTetriminoWithBoard", () => {
 });
 
 describe("isBoardFull", () => {
-  test("should return true if all rows have at least one cell with a value greater than 0", () => {
-    const board = [
-      [1, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 0, 3, 0, 0],
-      [0, 0, 0, 4, 0],
-      [0, 0, 0, 0, 5],
+  it("should return true if the board is full", () => {
+    const fullBoard = [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      // ...other rows filled with 1s
     ];
 
-    expect(isBoardFull(board)).toBe(true);
+    const tetrimino = getRandomTetromino();
+    const result = isBoardFull(fullBoard, tetrimino);
+    expect(result).toBe(true);
   });
 
-  test("should return false if any row does not have any cell with a value greater than 0", () => {
-    const board = [
-      [1, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 4, 0],
-      [0, 0, 0, 0, 5],
+  it("should return false if the board is not full", () => {
+    const notFullBoard = [
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      // ...other rows filled with 1s except the first row
     ];
 
-    expect(isBoardFull(board)).toBe(false);
+    const tetrimino = getRandomTetromino();
+    const result = isBoardFull(notFullBoard, tetrimino);
+    expect(result).toBe(false);
   });
 });
 
@@ -324,5 +328,56 @@ describe("clearFullRows", () => {
     const result = clearFullRows(initialBoard);
 
     expect(result).toEqual(initialBoard);
+  });
+});
+
+describe("getDropPosition", () => {
+  const emptyBoard: number[][] = Array.from({ length: 20 }, () =>
+    Array.from({ length: 10 }, () => 0)
+  );
+
+  const tetrimino: Tetromino = {
+    shape: [
+      [1, 1, 1],
+      [0, 1, 0],
+    ],
+    color: 1,
+  };
+
+  const startPosition: Position = { x: 4, y: 0 };
+
+  test("should return correct drop position for empty board", () => {
+    const result = getDropPosition(emptyBoard, tetrimino, startPosition);
+    expect(result).toBe(18);
+  });
+
+  test("should return correct drop position for board with obstacles", () => {
+    const boardWithObstacles = [
+      ...emptyBoard.slice(0, 15),
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+    ];
+
+    const result = getDropPosition(
+      boardWithObstacles,
+      tetrimino,
+      startPosition
+    );
+    expect(result).toBe(15);
+  });
+
+  test("should return correct drop position when Tetrimino is spawned inside obstacles", () => {
+    const boardWithObstacles = [
+      ...emptyBoard.slice(0, 14),
+      [0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+      [0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+    ];
+
+    const result = getDropPosition(
+      boardWithObstacles,
+      tetrimino,
+      startPosition
+    );
+    expect(result).toBe(13);
   });
 });

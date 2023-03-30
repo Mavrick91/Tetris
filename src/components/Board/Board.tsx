@@ -10,6 +10,7 @@ import { type Position, type Tetromino } from "~/types/tetromino";
 import { isEqual } from "lodash";
 import {
   clearFullRows,
+  getDropPosition,
   getRandomTetromino,
   getTetriminoCoordinates,
   isBoardFull,
@@ -110,6 +111,10 @@ const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore }) => {
             setTetrimino(rotatedTetrimino);
           }
           return;
+        case " ":
+          const newPosY = getDropPosition(boardState, tetrimino, position);
+          newPosition.y = newPosY;
+          break;
         default:
           return;
       }
