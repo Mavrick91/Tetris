@@ -62,7 +62,7 @@ const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore, tetriminoQueue, s
       setTetrimino(tetriminoQueue[0]);
       setPosition({ x: 4, y: 0 });
     }
-  }, [boardState, mergedBoard, position, setTetrimino, setTetriminoQueue, tetrimino, tetriminoQueue, updateScore]);
+  }, [boardState, mergedBoard, position, setTetrimino, setTetriminoQueue, tetriminoQueue, updateScore]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -70,7 +70,7 @@ const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore, tetriminoQueue, s
         alert("Game Over");
         clearInterval(timer);
       } else moveDown();
-    }, 500);
+    }, 350);
 
     return () => clearInterval(timer);
   }, [tetrimino, moveDown, boardState]);
@@ -121,7 +121,12 @@ const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore, tetriminoQueue, s
   }, [boardState, tetrimino, position, handleKeyDown]);
 
   return (
-    <div className="flex flex-col border-[16px] border-[#3A506B]">
+    <div
+      className="flex flex-col border-[16px] border-[#3A506B] rounded-tl rounded-bl"
+      style={{
+        boxShadow: "6px 3px 7px rgba(0, 0, 0)",
+      }}
+    >
       {mergedBoard.map((row, index) => (
         <Row key={index} row={row} rowIndex={index} />
       ))}

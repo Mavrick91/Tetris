@@ -32,7 +32,12 @@ const Tetris = () => {
         tetriminoQueue={tetriminoQueue}
         setTetriminoQueue={setTetriminoQueue}
       />
-      <div className="p-6 px-12 border-8 border-[#3A506B] border-t-[92px] relative flex items-start justify-center w-[210px]">
+      <div
+        className="p-6 px-12 rounded-tr rounded-br border-8 border-[#3A506B] border-t-[92px] relative flex items-start justify-center w-[210px]"
+        style={{
+          boxShadow: "6px 3px 7px rgba(0, 0, 0)",
+        }}
+      >
         <ScoreBoard score={score} />
         <NextTetriminos tetriminoQueue={tetriminoQueue} />
       </div>
