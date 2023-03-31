@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { type Tetromino } from "~/types/tetromino";
 import { getRandomTetromino } from "~/utils/tetrominoes";
 import Board from "../Board";
@@ -13,6 +13,17 @@ const Tetris = () => {
     getRandomTetromino(),
     getRandomTetromino(),
   ]);
+
+  const getUpdatedInterval = useCallback(() => {
+    const baseInterval = 500;
+    const intervalDecrease = 50;
+    const pointsThreshold = 1000;
+
+    const decreaseFactor = Math.floor(score / pointsThreshold);
+    const updatedInterval = baseInterval - decreaseFactor * intervalDecrease;
+
+    return updatedInterval > 0 ? updatedInterval : 0;
+  }, [score]);
 
   useEffect(() => {
     setTetrimino(getRandomTetromino());
@@ -31,6 +42,7 @@ const Tetris = () => {
         setTetrimino={setTetrimino}
         tetriminoQueue={tetriminoQueue}
         setTetriminoQueue={setTetriminoQueue}
+        interval={getUpdatedInterval()}
       />
       <div
         className="p-6 px-12 rounded-tr rounded-br border-8 border-[#3A506B] border-t-[92px] relative flex items-start justify-center w-[210px]"

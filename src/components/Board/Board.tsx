@@ -24,9 +24,10 @@ type Props = {
   setScore: Dispatch<SetStateAction<number>>;
   tetriminoQueue: Tetromino[];
   setTetriminoQueue: Dispatch<SetStateAction<Tetromino[]>>;
+  interval: number;
 };
 
-const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore, tetriminoQueue, setTetriminoQueue }) => {
+const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore, tetriminoQueue, setTetriminoQueue, interval }) => {
   const [boardState, setBoardState] = useState(initialBoard);
   const [position, setPosition] = useState<Position>({ x: 4, y: 0 });
 
@@ -73,11 +74,11 @@ const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore, tetriminoQueue, s
         alert("Game Over");
         clearInterval(moveDownTimer);
       } else moveDownRef.current();
-    }, 350);
+    }, interval);
 
     return () => clearInterval(moveDownTimer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [boardState]);
+  }, [boardState, interval]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
