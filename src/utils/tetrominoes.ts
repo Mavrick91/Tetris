@@ -4,23 +4,23 @@ import { type Position, type Tetromino } from "~/types/tetromino";
 export const getTetrominoColor = (numberColorIndex: number) => {
   switch (numberColorIndex) {
     case 0:
-      return "bg-slate-900";
+      return "bg-[#14110F]";
     case 1:
-      return "bg-blue-500";
+      return "bg-[#34312D]";
     case 2:
-      return "bg-red-500";
+      return "bg-[#7E7F83]";
     case 3:
-      return "bg-green-500";
+      return "bg-[#D9C5B2]";
     case 4:
-      return "bg-yellow-500";
+      return "bg-[#F3F3F4]";
     case 5:
-      return "bg-purple-500";
+      return "bg-[#5D4E6D]";
     case 6:
-      return "bg-pink-500";
+      return "bg-[#4F345A]";
     case 7:
-      return "bg-orange-500";
+      return "bg-[#D0CFCF]";
     default:
-      return "bg-slate-900";
+      return "bg-[#14110F]";
   }
 };
 
