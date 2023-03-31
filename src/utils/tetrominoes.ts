@@ -45,14 +45,13 @@ export function getRandomTetromino(): Tetromino {
     throw new Error("No tetrominoes");
   }
 
-  const randomIndex = Math.floor(Math.random() * TETROMINOES.length);
-  const tetromino = TETROMINOES[randomIndex];
-
-  if (!tetromino) {
-    throw new Error("Invalid tetromino");
+  // Shuffle the array of tetrominoes
+  for (let i = TETROMINOES.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [TETROMINOES[i]!, TETROMINOES[j]!] = [TETROMINOES[j], TETROMINOES[i]];
   }
 
-  return tetromino;
+  return TETROMINOES[0]!;
 }
 
 export function getTetriminoCoordinates(tetrimino: Tetromino, position: Position): Position[] {
