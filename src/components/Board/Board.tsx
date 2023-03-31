@@ -1,4 +1,4 @@
-import { type FC, useCallback, useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { type FC, useCallback, useEffect, useState, type Dispatch, type SetStateAction, useRef } from "react";
 import { type Position, type Tetromino } from "~/types/tetromino";
 import { isEqual } from "lodash";
 import {
@@ -62,18 +62,22 @@ const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore, tetriminoQueue, s
       setTetrimino(tetriminoQueue[0]);
       setPosition({ x: 4, y: 0 });
     }
-  }, [boardState, mergedBoard, position, setTetrimino, setTetriminoQueue, tetriminoQueue, updateScore]);
+  }, [boardState, mergedBoard, position, setTetrimino, setTetriminoQueue, tetrimino, tetriminoQueue, updateScore]);
+
+  const moveDownRef = useRef(moveDown);
+  moveDownRef.current = moveDown;
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const moveDownTimer = setInterval(() => {
       if (isBoardFull(boardState, tetrimino)) {
         alert("Game Over");
-        clearInterval(timer);
-      } else moveDown();
+        clearInterval(moveDownTimer);
+      } else moveDownRef.current();
     }, 350);
 
-    return () => clearInterval(timer);
-  }, [tetrimino, moveDown, boardState]);
+    return () => clearInterval(moveDownTimer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boardState]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -96,7 +100,7 @@ const Board: FC<Props> = ({ tetrimino, setTetrimino, setScore, tetriminoQueue, s
           if (isValidPosition(boardState, newCoordinates)) {
             setTetrimino(rotatedTetrimino);
           }
-          return;
+          break;
         case " ":
           const newPosY = getDropPosition(boardState, tetrimino, position);
           newPosition.y = newPosY;
